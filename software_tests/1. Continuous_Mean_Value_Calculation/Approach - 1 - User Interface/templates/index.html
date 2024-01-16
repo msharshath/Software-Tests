@@ -1,0 +1,119 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Mean Calculator</title>
+    <!-- Inline CSS for styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center; /* Center the content horizontally */
+            align-items: center; /* Center the content vertically */
+        }
+
+        footer img {
+            height: 100px; /* Adjust the height as needed */
+            width: 900px;
+            margin-right: 20px;
+        }
+
+        input {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 8px;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Continuous Mean Calculator</h1>
+    
+    <!-- Input field and two buttons for user interaction -->
+    <label for="value">Enter a value:</label>
+    <input type="text" id="value" placeholder="Enter a number">
+    <button onclick="calculateMean()">Calculate Mean</button>
+    <button onclick="endInput()">End Input</button>
+    
+    <!-- Display area for the result -->
+    <div id="result">Enter a value to calculate the mean.</div>
+
+    <footer>
+        <img src="https://www.itgroup-europe.com/fileadmin/_processed_/a/a/csm_logo_cab83c2c3a.jpg" alt="Footer Logo">
+    </footer>
+
+<!-- JavaScript code using Fetch API for asynchronous communication -->
+    <script>
+        // Asynchronous function to calculate mean
+        async function calculateMean() {
+            // Get the input value from the user
+            var inputValue = document.getElementById('value').value;
+
+            try {
+                // Send a POST request to the server using Fetch API
+                var response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ value: inputValue })
+                });
+
+                // Get the result from the response and display it
+                var result = await response.text();
+                document.getElementById('result').innerHTML = result;
+            } catch (error) {
+                // Handle errors, if any
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to end input (triggered by the "End Input" button)
+        async function endInput() {
+            // Clear and reset the current mean value to 0
+            document.getElementById('result').innerHTML = "Enter a value to calculate the mean.";
+
+            // Send a request to the server to reset calculations
+            try {
+                var response = await fetch('/reset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // Get the result from the response and display it
+                var result = await response.text();
+                alert(result);
+            } catch (error) {
+                // Handle errors, if any
+                console.error('Error:', error);
+            }
+        }
+    </script>
+
+
+
+</body>
+</html>
